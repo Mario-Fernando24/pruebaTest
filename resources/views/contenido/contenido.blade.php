@@ -1,6 +1,6 @@
 
 <template v-if="menu==0">
-    <h1>COMPONENTE HOME</h1>
+    <component_informe></component_informe>
 </template>
 
 <template v-if="menu==1">
