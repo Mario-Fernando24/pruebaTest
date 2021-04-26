@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Cliente;
+use App\Models\Cliente;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -12,7 +12,7 @@ class ClienteController extends Controller
 {
     public function allCliente(Request $request) {
 
-        // if(!$request->ajax()){return redirect('/');}
+         if(!$request->ajax()){return redirect('/');}
         $buscar = $request->buscar;
         $criterio = $request->criterio;
 

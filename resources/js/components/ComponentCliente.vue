@@ -161,7 +161,7 @@
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button"  class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <button type="button" @click="cerrarModal()" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                             <button type="button" v-if="tipoAccionButton==1" class="btn btn-primary" @click="registrarCliente()">Guardar</button>
                             <button type="button" v-if="tipoAccionButton==2" class="btn btn-primary" @click="actualizarCliente()">Editar</button>
                         </div>
@@ -403,6 +403,16 @@
 
            cerrarModal(){
                this.modal=0;
+                this.cliente.id='';
+                this.cliente.tipo_documento='ti';
+                this.cliente.num_documento='';
+                this.cliente.nombre='';
+                this.cliente.apellido='';
+                this.cliente.ciudad='';
+                this.cliente.latitud='';
+                this.cliente.longitud='';    
+                this.validate=false;
+      
            },
 
 

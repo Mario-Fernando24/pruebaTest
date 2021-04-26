@@ -21,13 +21,25 @@ Route::get('/', function () {
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::prefix('cliente')->group(function() {
-Route::get('allCliente','ClienteController@allCliente');
-Route::post('register','ClienteController@register');
-Route::put('actualizar', 'ClienteController@update');
-Route::put('desactivar', 'ClienteController@desactivar');
-Route::put('activar', 'ClienteController@activar');
+  Route::prefix('cliente')->group(function() {
+    Route::get('allCliente','ClienteController@allCliente');
+    Route::post('register','ClienteController@register');
+    Route::put('actualizar', 'ClienteController@update');
+    Route::put('desactivar', 'ClienteController@desactivar');
+    Route::put('activar', 'ClienteController@activar');
+  });
 
 
-});
+  Route::prefix('venta')->group(function() {
+    Route::get('allVenta','VentaController@allVenta');
+    Route::post('register','VentaController@register');
+    Route::put('desactivar', 'VentaController@desactivar');
+  });
+
+
+  Route::prefix('informes')->group(function() {
+    Route::get('grafica','InformeController@grafica');
+  });
+
+
 

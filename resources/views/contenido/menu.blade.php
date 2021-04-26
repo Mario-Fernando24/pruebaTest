@@ -11,6 +11,10 @@
                         <a class="nav-link" href="#"><i class="icon-people"></i> Cliente</a>
                     </li>
 
+                    <li @click="menu=2" class="nav-item nav-dropdown">
+                        <a class="nav-link" href="#"><i class="icon-basket"></i> Venta</a>
+                    </li>
+
                 </ul>
             </nav>
             <button class="sidebar-minimizer brand-minimizer" type="button"></button>
