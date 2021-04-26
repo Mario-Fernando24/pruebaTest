@@ -102,12 +102,13 @@
                                             <div class="form-group row">
                                                <div class="col-md-6">
                                                    <label class="col-md-6 form-control-label text-negrita" for="text-input">Tipo Documento</label>
-                                                    <input type="text"  class="form-control" required placeholder="Titulo del evento">
+                                                    <input type="text" v-model="cliente.tipo_documento"  class="form-control" required placeholder="Nombre">
                                                 </div>
+
 
                                                 <div class="col-md-6">
                                                 <label class="col-md-6 form-control-label text-negrita" for="text-input">Numero Documento</label>
-                                                    <input type="number"   class="form-control" required placeholder="Numero de documento">
+                                                    <input type="number" v-model="cliente.num_documento"   class="form-control" required placeholder="Numero de documento">
                                                 </div>
                                            </div>
 
@@ -116,18 +117,18 @@
                                             <div class="form-group row">
                                                <div class="col-md-4">
                                                    <label class="col-md-3 form-control-label text-negrita" for="text-input">Nombre</label>
-                                                    <input type="text"  class="form-control" required placeholder="Nombre">
+                                                    <input type="text" v-model="cliente.nombre"  class="form-control" required placeholder="Nombre">
                                                 </div>
 
                                                 <div class="col-md-4">
                                                 <label class="col-md-3 form-control-label text-negrita" for="text-input">Apellido</label>
-                                                    <input type="text"   class="form-control" required placeholder="Apellido">
+                                                    <input type="text" v-model="cliente.apellido"   class="form-control" required placeholder="Apellido">
                                                 </div>
 
 
                                                 <div class="col-md-4">
                                                 <label class="col-md-3 form-control-label text-negrita" for="text-input">Ciudad</label>
-                                                    <input type="text"   class="form-control" required placeholder="Ciudad">
+                                                    <input type="text" v-model="cliente.ciudad"  class="form-control" required placeholder="Ciudad">
                                                 </div>
                                            </div>
 
@@ -142,8 +143,8 @@
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                            <button type="button" class="btn btn-primary">Guardar</button>
+                            <button type="button"  class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <button type="button" class="btn btn-primary" @click="registrarCliente()">Guardar</button>
                         </div>
                     </div>
                     <!-- /.modal-content -->
@@ -193,12 +194,7 @@
              estado:''
           },
 
-       loadingLocation: false,
-        locationSend: {
-            latitude: "",
-            longitude: "",
-        },
-
+          
 
           arrayCliente:[],
           tituloModal : '',
@@ -279,6 +275,40 @@
         },
 
 
+            registrarCliente(){
+                //   if(this.validarUsuario()){
+                //       return ;
+                //   }
+                  let me=this;
+                  axios.post('/cliente/register', {  
+                    'tipo_documento':  this.cliente.tipo_documento,
+                    'num_documento': this.cliente.num_documento,
+                    'nombre': this.cliente.nombre,
+                    'apellido': this.cliente.apellido,
+                     'ciudad': this.cliente.ciudad,                   
+                    'latitud': this.cliente.latitud,  
+                    'longitud': this.cliente.longitud,                   
+                })
+                .then(function (response) {
+            var respuesta=response.data;
+            if(response.data.status){
+                    me.cerrarModal();
+                    me.listar_cliente(1,'','nombre');
+             Swal.fire(
+                'Exitoso?',
+                'Evento guardado correctamente',
+                'success'
+                )
+
+            }
+                }) 
+                .catch(function (error) {
+                    console.log(error);
+                });
+              },
+
+
+
 
 
           abrirModal(modelo, accion, data=[]){
@@ -308,27 +338,7 @@
 
            cerrarModal(){
                this.modal=0;
-           },
-
-                   getLocation() {
-            if (navigator.geolocation) {
-                this.loadingLocation = true;
-                navigator.geolocation.getCurrentPosition(this.showPosition);
-            } else {
-                Swal.fire({
-                    title: StartogoTranslate.modals.title.error,
-                    text: StartogoTranslate.modals.body.geolocationNotSupported,
-                    icon: "error",
-                    confirmButtonText: StartogoTranslate.general.ok,
-                });
-            }
-        },
-        showPosition(position) {
-            this.loadingLocation = false;
-            this.locationSend.latitude = position.coords.latitude;
-            this.locationSend.longitude = position.coords.longitude;
-        },
-
+           }
           
         },mounted() {
           this.listar_cliente(1,this.buscar,this.criterio);     

@@ -51,8 +51,8 @@ class ClienteController extends Controller
                 'nombre' => 'required',
                 'apellido' => 'required',
                 'ciudad' => 'required',
-                'latitud' => 'required',
-                'longitud' => 'required'
+                // 'latitud' => 'required',
+                // 'longitud' => 'required'
             ]);
 
             $cliente = Cliente::create([

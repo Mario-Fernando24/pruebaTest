@@ -23,5 +23,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::prefix('cliente')->group(function() {
 Route::get('allCliente','ClienteController@allCliente');
+Route::post('register','ClienteController@register');
+
 });
 
