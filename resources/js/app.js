@@ -22,6 +22,7 @@ window.Vue = require('vue');
 Vue.component('component_cliente', require('./components/ComponentCliente.vue').default);
 Vue.component('component_venta', require('./components/ComponentVenta.vue').default);
 Vue.component('component_informe', require('./components/ComponentInforme.vue').default);
+Vue.component('component_map', require('./components/ComponentMap.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -29,7 +30,15 @@ Vue.component('component_informe', require('./components/ComponentInforme.vue').
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+ import * as VueGoogleMaps from "vue2-google-maps";
 
+ Vue.use(VueGoogleMaps, {
+    load: {
+      key: "AIzaSyDW_p10NjPm2ru42ZNu_Oj-UgdV1BVcZuc",
+    },
+    installComponents: true,
+  });
+  
 const app = new Vue({
     el: '#app',
     data : {

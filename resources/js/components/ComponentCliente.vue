@@ -153,6 +153,30 @@
 
                                              <div class="form-group row">
                                                 <div class="col-md-12">
+
+                                                      <GmapMap
+                                                        :center="center"
+                                                        :zoom="18"
+                                                        map-style-id="roadmap"
+                                                        :options="mapOptions"
+                                                        style="width: 100vmin; height: 50vmin"
+                                                        ref="mapRef"
+                                                        @click="handleMapClick"
+                                                    >
+                                                        <GmapMarker
+                                                        :position="marker.position"
+                                                        :clickable="true"
+                                                        :draggable="true"
+                                                        @drag="handleMarkerDrag"
+                                                        @click="panToMarker"
+                                                        />
+                                                    </GmapMap>
+                                                    <!-- <button class="btn btn-outline-danger btn-sm" @click="geolocate">Buscar mi ubicacion</button> -->
+
+                                                    <!-- <p>Selected Position: {{ marker.position }}</p> -->
+
+
+
                                                 </div>   
 
                                              </div>
@@ -201,6 +225,14 @@
     export default {
        data(){
           return {
+
+               marker: { position: { lat: 10, lng: 10 } },
+      center: { lat: 10, lng: 10 },
+
+      mapOptions: {
+        disableDefaultUI: true,
+      },
+
            
           cliente:{
              id:'',
@@ -272,6 +304,39 @@
             }
         },
         methods: {
+
+
+                            //detects location from browser
+                    geolocate() {
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        this.marker.position = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                        };
+
+                        this.panToMarker();
+                    });
+                    },
+
+                    //sets the position of marker when dragged
+                    handleMarkerDrag(e) {
+                    this.marker.position = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+                    },
+
+                    //Moves the map view port to marker
+                    panToMarker() {
+                    this.$refs.mapRef.panTo(this.marker.position);
+                    this.$refs.mapRef.setZoom(18);
+                    },
+
+                    //Moves the marker to click position on the map
+                    handleMapClick(e) {
+                    this.marker.position = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+                    console.log(e);
+                    },
+
+
+
         
           listar_cliente(page, buscar, criterio){
                  let me=this;
@@ -310,9 +375,10 @@
                     'nombre': this.cliente.nombre,
                     'apellido': this.cliente.apellido,
                      'ciudad': this.cliente.ciudad,                   
-                    'latitud': this.cliente.latitud,  
-                    'longitud': this.cliente.longitud,                   
+                    'latitud': this.marker.position.lat,  
+                    'longitud': this.marker.position.lng,                   
                 })
+                
                 .then(function (response) {
             var respuesta=response.data;
             if(response.data.status){
@@ -531,6 +597,8 @@
           
         },mounted() {
           this.listar_cliente(1,this.buscar,this.criterio);     
+          this.geolocate();
+
          }
     }
 </script>

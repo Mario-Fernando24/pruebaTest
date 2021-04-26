@@ -15,6 +15,10 @@
                         <a class="nav-link" href="#"><i class="icon-basket"></i> Venta</a>
                     </li>
 
+                    <li @click="menu=3" class="nav-item nav-dropdown">
+                        <a class="nav-link" href="#"><i class="icon-basket"></i> Mapa</a>
+                    </li>
+
                 </ul>
             </nav>
             <button class="sidebar-minimizer brand-minimizer" type="button"></button>

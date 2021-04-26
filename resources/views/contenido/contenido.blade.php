@@ -14,3 +14,8 @@
 </template>
 
 
+<template v-if="menu==3">
+<component_map></component_map>
+</template>
+
+
