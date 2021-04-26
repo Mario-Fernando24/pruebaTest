@@ -10,8 +10,8 @@
                 <div class="card">
                     <div class="card-header">
                         <i class="fa fa-align-justify"></i> Usuario
-                        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalNuevo">
-                            <i class="icon-plus"></i>&nbsp;Nuevo
+                        <button type="button"  @click="abrirModal('cliente','registrar')" class="btn btn-secondary">
+                            <i class="icon-plus"></i>&nbsp;Añadir
                         </button>
                     </div>
                     <div class="card-body">
@@ -52,7 +52,7 @@
                                     </td>
 
                                     <td>
-                                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalNuevo">
+                                        <button type="button"   class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalNuevo">
                                           <i class="icon-pencil"></i>
                                         </button> &nbsp;
                                         <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modalEliminar">
@@ -62,7 +62,7 @@
                                 </tr>
                             </tbody>
                         </table>
-                                                <nav>
+                            <nav>
 
                                 <ul class="pagination">
                                                                     <!--si la pagina actual > que 1-->
@@ -87,30 +87,58 @@
                 <!-- Fin ejemplo de tabla Listado -->
             </div>
             <!--Inicio del modal agregar/actualizar-->
-            <div class="modal fade" id="modalNuevo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+              <div class="modal fade"  tabindex="-1" :class="{'mostrar':modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
                 <div class="modal-dialog modal-primary modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title">Agregar categoría</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <h4 class="modal-title" v-text="tituloModal"></h4>
+                            <button type="button" class="close" @click="cerrarModal()"  aria-label="Close">
                               <span aria-hidden="true">×</span>
                             </button>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-bod">
                             <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Nombre</label>
-                                    <div class="col-md-9">
-                                        <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre de categoría">
-                                        <span class="help-block">(*) Ingrese el nombre de la categoría</span>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="email-input">Descripción</label>
-                                    <div class="col-md-9">
-                                        <input type="email" id="descripcion" name="descripcion" class="form-control" placeholder="Enter Email">
-                                    </div>
-                                </div>
+                               
+                                            <div class="form-group row">
+                                               <div class="col-md-6">
+                                                   <label class="col-md-6 form-control-label text-negrita" for="text-input">Tipo Documento</label>
+                                                    <input type="text"  class="form-control" required placeholder="Titulo del evento">
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                <label class="col-md-6 form-control-label text-negrita" for="text-input">Numero Documento</label>
+                                                    <input type="number"   class="form-control" required placeholder="Numero de documento">
+                                                </div>
+                                           </div>
+
+
+
+                                            <div class="form-group row">
+                                               <div class="col-md-4">
+                                                   <label class="col-md-3 form-control-label text-negrita" for="text-input">Nombre</label>
+                                                    <input type="text"  class="form-control" required placeholder="Nombre">
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                <label class="col-md-3 form-control-label text-negrita" for="text-input">Apellido</label>
+                                                    <input type="text"   class="form-control" required placeholder="Apellido">
+                                                </div>
+
+
+                                                <div class="col-md-4">
+                                                <label class="col-md-3 form-control-label text-negrita" for="text-input">Ciudad</label>
+                                                    <input type="text"   class="form-control" required placeholder="Ciudad">
+                                                </div>
+                                           </div>
+
+
+                                             <div class="form-group row">
+                                                <div class="col-md-12">
+                                                </div>   
+
+                                             </div>
+
+
                             </form>
                         </div>
                         <div class="modal-footer">
@@ -125,7 +153,7 @@
             <!--Fin del modal-->
             <!-- Inicio del modal Eliminar -->
             <div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
-                <div class="modal-dialog modal-danger" role="document">
+                <div class="modal-dialo modal-primary modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 class="modal-title">Eliminar Categoría</h4>
@@ -133,7 +161,7 @@
                               <span aria-hidden="true">×</span>
                             </button>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-bod">
                             <p>Estas seguro de eliminar la categoría?</p>
                         </div>
                         <div class="modal-footer">
@@ -165,9 +193,17 @@
              estado:''
           },
 
+       loadingLocation: false,
+        locationSend: {
+            latitude: "",
+            longitude: "",
+        },
+
+
           arrayCliente:[],
           tituloModal : '',
           tipoAccionButton : 0,   
+          modal:0,
           pagination : {
             //numero total de registro
             'total' : 0,
@@ -216,6 +252,7 @@
             }
         },
         methods: {
+        
           listar_cliente(page, buscar, criterio){
                  let me=this;
                   var url= '/cliente/allCliente?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
@@ -230,19 +267,70 @@
                         console.log(error);
                     });
               },
-          
-        },
+
 
         //Metodo de cambiar pagina recibe un parametro de page "numero de la pagina que queremos mostrar"
         cambiarPagina(page, buscar, criterio){
-          let me = this;
-          //actualiza a la pagina actual
-          me.pagination.current_page = page;
-           //envia la peticion de listar esa pagina
-          me.listar_cliente(page, buscar, criterio);
-    },   
+            let me = this;
+            //actualiza a la pagina actual
+            me.pagination.current_page = page;
+            //envia la peticion de listar esa pagina
+            me.listar_cliente(page, buscar, criterio);
+        },
 
-        mounted() {
+
+
+
+          abrirModal(modelo, accion, data=[]){
+                 switch(modelo){
+                       case "cliente":
+                      {
+                         switch(accion){
+                              case 'registrar':
+                             {
+                                 this.modal=1;
+                                 this.tituloModal='Añadir Cliente';
+                                 this.tipoAccionButton=1;
+                               break;
+                              } 
+                              case 'actualizar':
+                             {
+                                 this.modal=1;
+                                 this.tituloModal='Actualizar Cliente';
+                                 this.tipoAccionButton=2;
+                               break;
+                              } 
+                         }
+
+                      }
+                 }
+           },
+
+           cerrarModal(){
+               this.modal=0;
+           },
+
+                   getLocation() {
+            if (navigator.geolocation) {
+                this.loadingLocation = true;
+                navigator.geolocation.getCurrentPosition(this.showPosition);
+            } else {
+                Swal.fire({
+                    title: StartogoTranslate.modals.title.error,
+                    text: StartogoTranslate.modals.body.geolocationNotSupported,
+                    icon: "error",
+                    confirmButtonText: StartogoTranslate.general.ok,
+                });
+            }
+        },
+        showPosition(position) {
+            this.loadingLocation = false;
+            this.locationSend.latitude = position.coords.latitude;
+            this.locationSend.longitude = position.coords.longitude;
+        },
+
+          
+        },mounted() {
           this.listar_cliente(1,this.buscar,this.criterio);     
          }
     }
@@ -268,5 +356,40 @@
     color: red !important;
     font-weight: bold;
   }
+   .text-negrita{
+    color: black !important;
+    font-weight: bold;
+  }
+  
+  .moda{
+    display: block !important; /* I added this to see the modal, you don't need this */
+}
+/* Important part */
+.modal-dialo{
+    overflow-y: initial !important
+}
+.modal-bod{
+    height: 60vh;
+    overflow-y: auto;
+    margin: 10px 30px 10px 30px
+}
+.hiddenFileInput > input{
+  height: 100%;
+  width: 100;
+  opacity: 0;
+  cursor: pointer;
+}
+.hiddenFileInput{
+  border: 1px solid #ccc;
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  overflow: hidden;
+  cursor: pointer;
+  
+  /*for the background, optional*/
+  background: center center no-repeat;
+  background-size: 75% 75%;
+  background-image:  url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBoZWlnaHQ9IjUxMnB4IiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9Ii01MyAxIDUxMSA1MTEuOTk5MDYiIHdpZHRoPSI1MTJweCI+CjxnIGlkPSJzdXJmYWNlMSI+CjxwYXRoIGQ9Ik0gMjc2LjQxMDE1NiAzLjk1NzAzMSBDIDI3NC4wNjI1IDEuNDg0Mzc1IDI3MC44NDM3NSAwIDI2Ny41MDc4MTIgMCBMIDY3Ljc3NzM0NCAwIEMgMzAuOTIxODc1IDAgMC41IDMwLjMwMDc4MSAwLjUgNjcuMTUyMzQ0IEwgMC41IDQ0NC44NDM3NSBDIDAuNSA0ODEuNjk5MjE5IDMwLjkyMTg3NSA1MTIgNjcuNzc3MzQ0IDUxMiBMIDMzOC44NjMyODEgNTEyIEMgMzc1LjcxODc1IDUxMiA0MDYuMTQwNjI1IDQ4MS42OTkyMTkgNDA2LjE0MDYyNSA0NDQuODQzNzUgTCA0MDYuMTQwNjI1IDE0NC45NDE0MDYgQyA0MDYuMTQwNjI1IDE0MS43MjY1NjIgNDA0LjY1NjI1IDEzOC42MzY3MTkgNDAyLjU1NDY4OCAxMzYuMjg1MTU2IFogTSAyNzkuOTk2MDk0IDQzLjY1NjI1IEwgMzY0LjQ2NDg0NCAxMzIuMzI4MTI1IEwgMzA5LjU1NDY4OCAxMzIuMzI4MTI1IEMgMjkzLjIzMDQ2OSAxMzIuMzI4MTI1IDI3OS45OTYwOTQgMTE5LjIxODc1IDI3OS45OTYwOTQgMTAyLjg5NDUzMSBaIE0gMzM4Ljg2MzI4MSA0ODcuMjY1NjI1IEwgNjcuNzc3MzQ0IDQ4Ny4yNjU2MjUgQyA0NC42NTIzNDQgNDg3LjI2NTYyNSAyNS4yMzQzNzUgNDY4LjA5NzY1NiAyNS4yMzQzNzUgNDQ0Ljg0Mzc1IEwgMjUuMjM0Mzc1IDY3LjE1MjM0NCBDIDI1LjIzNDM3NSA0NC4wMjczNDQgNDQuNTI3MzQ0IDI0LjczNDM3NSA2Ny43NzczNDQgMjQuNzM0Mzc1IEwgMjU1LjI2MTcxOSAyNC43MzQzNzUgTCAyNTUuMjYxNzE5IDEwMi44OTQ1MzEgQyAyNTUuMjYxNzE5IDEzMi45NDUzMTIgMjc5LjUwMzkwNiAxNTcuMDYyNSAzMDkuNTU0Njg4IDE1Ny4wNjI1IEwgMzgxLjQwNjI1IDE1Ny4wNjI1IEwgMzgxLjQwNjI1IDQ0NC44NDM3NSBDIDM4MS40MDYyNSA0NjguMDk3NjU2IDM2Mi4xMTMyODEgNDg3LjI2NTYyNSAzMzguODYzMjgxIDQ4Ny4yNjU2MjUgWiBNIDMzOC44NjMyODEgNDg3LjI2NTYyNSAiIHN0eWxlPSIgZmlsbC1ydWxlOm5vbnplcm87ZmlsbC1vcGFjaXR5OjE7IiBzdHJva2U9IiMwMDAwMDAiIGZpbGw9IiMwMDAwMDAiLz4KPHBhdGggZD0iTSAzMDUuMTAxNTYyIDQwMS45MzM1OTQgTCAxMDEuNTM5MDYyIDQwMS45MzM1OTQgQyA5NC43MzgyODEgNDAxLjkzMzU5NCA4OS4xNzE4NzUgNDA3LjQ5NjA5NCA4OS4xNzE4NzUgNDE0LjMwMDc4MSBDIDg5LjE3MTg3NSA0MjEuMTAxNTYyIDk0LjczODI4MSA0MjYuNjY3OTY5IDEwMS41MzkwNjIgNDI2LjY2Nzk2OSBMIDMwNS4yMjY1NjIgNDI2LjY2Nzk2OSBDIDMxMi4wMjczNDQgNDI2LjY2Nzk2OSAzMTcuNTkzNzUgNDIxLjEwMTU2MiAzMTcuNTkzNzUgNDE0LjMwMDc4MSBDIDMxNy41OTM3NSA0MDcuNDk2MDk0IDMxMi4wMjczNDQgNDAxLjkzMzU5NCAzMDUuMTAxNTYyIDQwMS45MzM1OTQgWiBNIDMwNS4xMDE1NjIgNDAxLjkzMzU5NCAiIHN0eWxlPSIgZmlsbC1ydWxlOm5vbnplcm87ZmlsbC1vcGFjaXR5OjE7IiBzdHJva2U9IiMwMDAwMDAiIGZpbGw9IiMwMDAwMDAiLz4KPHBhdGggZD0iTSAxNDAgMjY4Ljg2MzI4MSBMIDE5MC45NTMxMjUgMjE0LjA3NDIxOSBMIDE5MC45NTMxMjUgMzQ5LjEyNSBDIDE5MC45NTMxMjUgMzU1LjkyNTc4MSAxOTYuNTE5NTMxIDM2MS40OTIxODggMjAzLjMyMDMxMiAzNjEuNDkyMTg4IEMgMjEwLjEyNSAzNjEuNDkyMTg4IDIxNS42ODc1IDM1NS45MjU3ODEgMjE1LjY4NzUgMzQ5LjEyNSBMIDIxNS42ODc1IDIxNC4wNzQyMTkgTCAyNjYuNjQwNjI1IDI2OC44NjMyODEgQyAyNjkuMTEzMjgxIDI3MS40NTcwMzEgMjcyLjMzMjAzMSAyNzIuODIwMzEyIDI3NS42Njc5NjkgMjcyLjgyMDMxMiBDIDI3OC42MzY3MTkgMjcyLjgyMDMxMiAyODEuNzMwNDY5IDI3MS43MDcwMzEgMjg0LjA3ODEyNSAyNjkuNDgwNDY5IEMgMjg5LjAyNzM0NCAyNjQuNzgxMjUgMjg5LjM5ODQzOCAyNTYuOTg4MjgxIDI4NC42OTkyMTkgMjUyLjA0Mjk2OSBMIDIxMi4yMjY1NjIgMTc0LjI1MzkwNiBDIDIwOS44NzUgMTcxLjc4MTI1IDIwNi42NjAxNTYgMTcwLjI5Njg3NSAyMDMuMTk5MjE5IDE3MC4yOTY4NzUgQyAxOTkuNzM0Mzc1IDE3MC4yOTY4NzUgMTk2LjUxOTUzMSAxNzEuNzgxMjUgMTk0LjE3MTg3NSAxNzQuMjUzOTA2IEwgMTIxLjY5OTIxOSAyNTIuMDQyOTY5IEMgMTE3IDI1Ni45ODgyODEgMTE3LjM3MTA5NCAyNjQuOTAyMzQ0IDEyMi4zMTY0MDYgMjY5LjQ4MDQ2OSBDIDEyNy41MTE3MTkgMjc0LjE3OTY4OCAxMzUuMzAwNzgxIDI3My44MDg1OTQgMTQwIDI2OC44NjMyODEgWiBNIDE0MCAyNjguODYzMjgxICIgc3R5bGU9IiBmaWxsLXJ1bGU6bm9uemVybztmaWxsLW9wYWNpdHk6MTsiIHN0cm9rZT0iIzAwMDAwMCIgZmlsbD0iIzAwMDAwMCIvPgo8L2c+Cjwvc3ZnPgo=)
+}
 </style>
-© 2021 GitHu
