@@ -112,13 +112,18 @@
                                             <div class="form-group row">
                                                <div class="col-md-6">
                                                    <label class="col-md-6 form-control-label text-negrita" for="text-input">Tipo Documento</label>
-                                                    <input type="text" v-model="cliente.tipo_documento"  class="form-control" required placeholder="Nombre">
+                                                        <select v-model="cliente.tipo_documento" class="form-control"  >
+                                                            <option value="ti">Tarjeta de identidad</option>
+                                                            <option value="cc">Cedula</option>
+                                                            <option value="te">Tarjeta de extranjero</option>
+                                                        </select>
                                                 </div>
 
 
                                                 <div class="col-md-6">
                                                 <label class="col-md-6 form-control-label text-negrita" for="text-input">Numero Documento</label>
                                                     <input type="number" v-model="cliente.num_documento"   class="form-control" required placeholder="Numero de documento">
+                                                    <span class="text-error"  v-if="validate==true && cliente.num_documento.length<=0">Numero de documento es obligatorio</span>
                                                 </div>
                                            </div>
 
@@ -128,17 +133,20 @@
                                                <div class="col-md-4">
                                                    <label class="col-md-3 form-control-label text-negrita" for="text-input">Nombre</label>
                                                     <input type="text" v-model="cliente.nombre"  class="form-control" required placeholder="Nombre">
+                                                     <span class="text-error"  v-if="validate==true && cliente.nombre.length<=0">Nombre es obligatorio</span>
                                                 </div>
 
                                                 <div class="col-md-4">
                                                 <label class="col-md-3 form-control-label text-negrita" for="text-input">Apellido</label>
                                                     <input type="text" v-model="cliente.apellido"   class="form-control" required placeholder="Apellido">
+                                                    <span class="text-error"  v-if="validate==true && cliente.apellido.length<=0">Apellido es obligatorio</span>
                                                 </div>
 
 
                                                 <div class="col-md-4">
                                                 <label class="col-md-3 form-control-label text-negrita" for="text-input">Ciudad</label>
                                                     <input type="text" v-model="cliente.ciudad"  class="form-control" required placeholder="Ciudad">
+                                                     <span class="text-error"  v-if="validate==true && cliente.ciudad.length<=0">Ciudad es obligatorio</span>
                                                 </div>
                                            </div>
 
@@ -196,7 +204,7 @@
            
           cliente:{
              id:'',
-             tipo_documento:'',
+             tipo_documento:'ti',
              num_documento:'',
              nombre:'',
              apellido:'',
@@ -229,6 +237,10 @@
             offset : 3,
             criterio : 'nombre',
             buscar  : '',
+            errorCliente : 0,
+            errorMensajeClienteArray: [],
+            validate:false,
+
           }
         },
         //Propiedad computada declaramos unas funciones
@@ -288,9 +300,9 @@
 
 
             registrarCliente(){
-                //   if(this.validarUsuario()){
-                //       return ;
-                //   }
+
+                if(this.validarCliente()){return ;}
+
                   let me=this;
                   axios.post('/cliente/register', {  
                     'tipo_documento':  this.cliente.tipo_documento,
@@ -324,6 +336,9 @@
 
 
              actualizarCliente(){
+
+                  if(this.validarCliente()){return ;}
+
                   let me=this;
                   axios.put('/cliente/actualizar', {
                     
@@ -389,6 +404,23 @@
            cerrarModal(){
                this.modal=0;
            },
+
+
+
+        validarCliente(){
+            this.errorCliente=0;
+            this.errorMensajeClienteArray=[];
+            if(!this.cliente.tipo_documento) this.errorMensajeClienteArray.push("");
+            if(!this.cliente.num_documento) this.errorMensajeClienteArray.push("");
+            if(!this.cliente.nombre) this.errorMensajeClienteArray.push("");
+            if(!this.cliente.apellido) this.errorMensajeClienteArray.push("");
+            if(!this.cliente.ciudad) this.errorMensajeClienteArray.push("");
+            
+            if(this.errorMensajeClienteArray.length) 
+            this.errorCliente=1;
+            this.validate=true;
+            return this.errorCliente;
+        },
 
 
 

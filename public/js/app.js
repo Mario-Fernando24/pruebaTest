@@ -2099,12 +2099,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       cliente: {
         id: '',
-        tipo_documento: '',
+        tipo_documento: 'ti',
         num_documento: '',
         nombre: '',
         apellido: '',
@@ -2133,7 +2141,10 @@ __webpack_require__.r(__webpack_exports__);
       },
       offset: 3,
       criterio: 'nombre',
-      buscar: ''
+      buscar: '',
+      errorCliente: 0,
+      errorMensajeClienteArray: [],
+      validate: false
     };
   },
   //Propiedad computada declaramos unas funciones
@@ -2193,9 +2204,10 @@ __webpack_require__.r(__webpack_exports__);
       me.listar_cliente(page, buscar, criterio);
     },
     registrarCliente: function registrarCliente() {
-      //   if(this.validarUsuario()){
-      //       return ;
-      //   }
+      if (this.validarCliente()) {
+        return;
+      }
+
       var me = this;
       axios.post('/cliente/register', {
         'tipo_documento': this.cliente.tipo_documento,
@@ -2218,6 +2230,10 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     actualizarCliente: function actualizarCliente() {
+      if (this.validarCliente()) {
+        return;
+      }
+
       var me = this;
       axios.put('/cliente/actualizar', {
         'tipo_documento': this.cliente.tipo_documento,
@@ -2270,6 +2286,18 @@ __webpack_require__.r(__webpack_exports__);
     },
     cerrarModal: function cerrarModal() {
       this.modal = 0;
+    },
+    validarCliente: function validarCliente() {
+      this.errorCliente = 0;
+      this.errorMensajeClienteArray = [];
+      if (!this.cliente.tipo_documento) this.errorMensajeClienteArray.push("");
+      if (!this.cliente.num_documento) this.errorMensajeClienteArray.push("");
+      if (!this.cliente.nombre) this.errorMensajeClienteArray.push("");
+      if (!this.cliente.apellido) this.errorMensajeClienteArray.push("");
+      if (!this.cliente.ciudad) this.errorMensajeClienteArray.push("");
+      if (this.errorMensajeClienteArray.length) this.errorCliente = 1;
+      this.validate = true;
+      return this.errorCliente;
     },
     desactivarCliente: function desactivarCliente(id) {
       var _this = this;
@@ -39031,35 +39059,52 @@ var render = function() {
                           [_vm._v("Tipo Documento")]
                         ),
                         _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.cliente.tipo_documento,
-                              expression: "cliente.tipo_documento"
-                            }
-                          ],
-                          staticClass: "form-control",
-                          attrs: {
-                            type: "text",
-                            required: "",
-                            placeholder: "Nombre"
-                          },
-                          domProps: { value: _vm.cliente.tipo_documento },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
+                        _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.cliente.tipo_documento,
+                                expression: "cliente.tipo_documento"
                               }
-                              _vm.$set(
-                                _vm.cliente,
-                                "tipo_documento",
-                                $event.target.value
-                              )
+                            ],
+                            staticClass: "form-control",
+                            on: {
+                              change: function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.$set(
+                                  _vm.cliente,
+                                  "tipo_documento",
+                                  $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                )
+                              }
                             }
-                          }
-                        })
+                          },
+                          [
+                            _c("option", { attrs: { value: "ti" } }, [
+                              _vm._v("Tarjeta de identidad")
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "cc" } }, [
+                              _vm._v("Cedula")
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "te" } }, [
+                              _vm._v("Tarjeta de extranjero")
+                            ])
+                          ]
+                        )
                       ]),
                       _vm._v(" "),
                       _c("div", { staticClass: "col-md-6" }, [
@@ -39101,7 +39146,14 @@ var render = function() {
                               )
                             }
                           }
-                        })
+                        }),
+                        _vm._v(" "),
+                        _vm.validate == true &&
+                        _vm.cliente.num_documento.length <= 0
+                          ? _c("span", { staticClass: "text-error" }, [
+                              _vm._v("Numero de documento es obligatorio")
+                            ])
+                          : _vm._e()
                       ])
                     ]),
                     _vm._v(" "),
@@ -39145,7 +39197,13 @@ var render = function() {
                               )
                             }
                           }
-                        })
+                        }),
+                        _vm._v(" "),
+                        _vm.validate == true && _vm.cliente.nombre.length <= 0
+                          ? _c("span", { staticClass: "text-error" }, [
+                              _vm._v("Nombre es obligatorio")
+                            ])
+                          : _vm._e()
                       ]),
                       _vm._v(" "),
                       _c("div", { staticClass: "col-md-4" }, [
@@ -39187,7 +39245,13 @@ var render = function() {
                               )
                             }
                           }
-                        })
+                        }),
+                        _vm._v(" "),
+                        _vm.validate == true && _vm.cliente.apellido.length <= 0
+                          ? _c("span", { staticClass: "text-error" }, [
+                              _vm._v("Apellido es obligatorio")
+                            ])
+                          : _vm._e()
                       ]),
                       _vm._v(" "),
                       _c("div", { staticClass: "col-md-4" }, [
@@ -39229,7 +39293,13 @@ var render = function() {
                               )
                             }
                           }
-                        })
+                        }),
+                        _vm._v(" "),
+                        _vm.validate == true && _vm.cliente.ciudad.length <= 0
+                          ? _c("span", { staticClass: "text-error" }, [
+                              _vm._v("Ciudad es obligatorio")
+                            ])
+                          : _vm._e()
                       ])
                     ]),
                     _vm._v(" "),
