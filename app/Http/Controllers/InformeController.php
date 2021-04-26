@@ -11,17 +11,40 @@ class InformeController extends Controller
 {
     public function grafica(Request $request)
     {
-        $hora=Carbon::now('America/Bogota');
+        $fechaActual=Carbon::now('America/Bogota');
 
 
-        $ventaMayorValor = DB::table('detalle_ventas as d')
-        ->join('articulos as art','art.id','=','d.id_articulo')
-        ->join('ventas as v','v.id','=','d.id_venta')
-       ->select(DB::raw('sum(d.cantidad) as total'),'d.id_articulo','art.nombre')
-       ->where('v.estado','registrado')
-       ->groupBy('d.id_articulo')
-       ->orderBy('total', 'desc')
-       ->take(5)
+        $ventaTotal = DB::table('venta as v')
+       ->select(DB::raw('sum(v.valor_venta) as total'))
+       ->where('v.estado',1)
+       ->whereDate('v.created_at',$fechaActual)
+       ->take(1)
        ->get();
+
+       $numVenta = DB::table('venta as v')
+       ->select(DB::raw('count(*) as total'))
+       ->where('v.estado',1)
+       ->whereDate('v.created_at',$fechaActual)
+       ->take(1)
+       ->get();
+
+       $MenorVenta=Venta::where('estado',1)
+       ->whereDate('created_at',$fechaActual)
+       ->min('valor_venta');
+
+       $mayorVenta=Venta::where('estado',1)
+       ->whereDate('created_at',$fechaActual)
+       ->max('valor_venta');
+      
+
+       return ['ventaTotal'=>$ventaTotal,'numVenta'=>$numVenta,'MenorVenta'=>$MenorVenta,'mayorVenta'=>$mayorVenta];      
+
      }
 }
+
+
+// = DB::table('venta as v')
+// ->where('v.estado',1)
+// ->whereDate('v.created_at',$fechaActual)
+// ->max('valor_venta')
+// ->fir();

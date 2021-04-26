@@ -15,6 +15,7 @@ class Venta extends Model
         'id',
         'id_cliente',
         'valor_venta',
+        
     ];
 
     public function cliente(){
