@@ -74,8 +74,22 @@ class ClienteController extends Controller
         }
     }
 
+    public function update(Request $request)
+    {
 
+        $cliente = Cliente::findOrFail($request->get('id'));
+        $cliente->tipo_documento =$request->get('tipo_documento'); 
+        $cliente->num_documento =$request->get('num_documento'); 
+        $cliente->nombre = $request->get('nombre');
+        $cliente->apellido = $request->get('apellido');
+        $cliente->ciudad = $request->get('ciudad');
+        $cliente->latitud = $request->get('latitud');
+        $cliente->longitud = $request->get('longitud');
+        $cliente->update();
 
+        return response()->json(['status' => true,], 200);
+
+    }
 
 
     public function desactivar(Request $request)

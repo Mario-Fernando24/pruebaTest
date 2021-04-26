@@ -154,7 +154,8 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button"  class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                            <button type="button" class="btn btn-primary" @click="registrarCliente()">Guardar</button>
+                            <button type="button" v-if="tipoAccionButton==1" class="btn btn-primary" @click="registrarCliente()">Guardar</button>
+                            <button type="button" v-if="tipoAccionButton==2" class="btn btn-primary" @click="actualizarCliente()">Editar</button>
                         </div>
                     </div>
                     <!-- /.modal-content -->
@@ -194,6 +195,7 @@
           return {
            
           cliente:{
+             id:'',
              tipo_documento:'',
              num_documento:'',
              nombre:'',
@@ -321,6 +323,37 @@
 
 
 
+             actualizarCliente(){
+                  let me=this;
+                  axios.put('/cliente/actualizar', {
+                    
+                    'tipo_documento':  this.cliente.tipo_documento,
+                    'num_documento': this.cliente.num_documento,
+                    'nombre': this.cliente.nombre,
+                    'apellido': this.cliente.apellido,
+                     'ciudad': this.cliente.ciudad,                   
+                    'latitud': this.cliente.latitud,  
+                    'longitud': this.cliente.longitud,   
+                    'id': this.cliente.id 
+                }).then(function (response) {
+                    me.cerrarModal();
+                    me.listar_cliente(1,'','nombre');
+                     Swal.fire(
+                'Exitoso',
+                'Cliente Editado correctamente',
+                'success'
+                )
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+              },
+
+
+
+
+
+
           abrirModal(modelo, accion, data=[]){
                  switch(modelo){
                        case "cliente":
@@ -338,6 +371,13 @@
                                  this.modal=1;
                                  this.tituloModal='Actualizar Cliente';
                                  this.tipoAccionButton=2;
+                                 this.cliente.tipo_documento=data['tipo_documento']; 
+                                 this.cliente.num_documento=data['num_documento']; 
+                                 this.cliente.nombre=data['nombre']; 
+                                 this.cliente.apellido=data['apellido']; 
+                                 this.cliente.ciudad=data['ciudad']; 
+                                 this.cliente.id=data['id'];
+
                                break;
                               } 
                          }

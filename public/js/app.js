@@ -2098,10 +2098,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       cliente: {
+        id: '',
         tipo_documento: '',
         num_documento: '',
         nombre: '',
@@ -2215,6 +2217,25 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     },
+    actualizarCliente: function actualizarCliente() {
+      var me = this;
+      axios.put('/cliente/actualizar', {
+        'tipo_documento': this.cliente.tipo_documento,
+        'num_documento': this.cliente.num_documento,
+        'nombre': this.cliente.nombre,
+        'apellido': this.cliente.apellido,
+        'ciudad': this.cliente.ciudad,
+        'latitud': this.cliente.latitud,
+        'longitud': this.cliente.longitud,
+        'id': this.cliente.id
+      }).then(function (response) {
+        me.cerrarModal();
+        me.listar_cliente(1, '', 'nombre');
+        Swal.fire('Exitoso', 'Cliente Editado correctamente', 'success');
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
     abrirModal: function abrirModal(modelo, accion) {
       var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
 
@@ -2235,6 +2256,12 @@ __webpack_require__.r(__webpack_exports__);
                   this.modal = 1;
                   this.tituloModal = 'Actualizar Cliente';
                   this.tipoAccionButton = 2;
+                  this.cliente.tipo_documento = data['tipo_documento'];
+                  this.cliente.num_documento = data['num_documento'];
+                  this.cliente.nombre = data['nombre'];
+                  this.cliente.apellido = data['apellido'];
+                  this.cliente.ciudad = data['ciudad'];
+                  this.cliente.id = data['id'];
                   break;
                 }
             }
@@ -39221,19 +39248,37 @@ var render = function() {
                   [_vm._v("Cerrar")]
                 ),
                 _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-primary",
-                    attrs: { type: "button" },
-                    on: {
-                      click: function($event) {
-                        return _vm.registrarCliente()
-                      }
-                    }
-                  },
-                  [_vm._v("Guardar")]
-                )
+                _vm.tipoAccionButton == 1
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary",
+                        attrs: { type: "button" },
+                        on: {
+                          click: function($event) {
+                            return _vm.registrarCliente()
+                          }
+                        }
+                      },
+                      [_vm._v("Guardar")]
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.tipoAccionButton == 2
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary",
+                        attrs: { type: "button" },
+                        on: {
+                          click: function($event) {
+                            return _vm.actualizarCliente()
+                          }
+                        }
+                      },
+                      [_vm._v("Editar")]
+                    )
+                  : _vm._e()
               ])
             ])
           ]

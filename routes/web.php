@@ -24,6 +24,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::prefix('cliente')->group(function() {
 Route::get('allCliente','ClienteController@allCliente');
 Route::post('register','ClienteController@register');
+Route::put('actualizar', 'ClienteController@update');
 Route::put('desactivar', 'ClienteController@desactivar');
 Route::put('activar', 'ClienteController@activar');
 
