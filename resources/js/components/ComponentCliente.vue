@@ -52,12 +52,22 @@
                                     </td>
 
                                     <td>
-                                        <button type="button"   class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalNuevo">
+                                        <button type="button"  @click="abrirModal('cliente', 'actualizar',cliente)"   class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#modalNuevo">
                                           <i class="icon-pencil"></i>
                                         </button> &nbsp;
-                                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modalEliminar">
-                                          <i class="icon-trash"></i>
+
+                                    <template v-if="cliente.estado"> 
+                                        <button type="button"  class="btn btn-outline-danger btn-sm" @click="desactivarCliente(cliente.id)">
+                                            <i class="icon-trash"></i>
                                         </button>
+                                        </template>
+                                            <template v-else> 
+                                        <button type="button"  class="btn btn-outline-success btn-sm" @click="activarCliente(cliente.id)">
+                                            <i class="icon-check"></i>
+                                        </button>
+                                   </template>
+
+
                                     </td>
                                 </tr>
                             </tbody>
@@ -338,7 +348,104 @@
 
            cerrarModal(){
                this.modal=0;
-           }
+           },
+
+
+
+
+            desactivarCliente(id){
+               console.log(id);
+               const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+                })
+                swalWithBootstrapButtons.fire({
+                title: 'Estas seguro de desactivar este Cliente?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Aceptar',
+                cancelButtonText: 'Cancelar',
+                reverseButtons: true
+                }).then((result) => {
+                if (result.isConfirmed) {
+                     let me=this;
+                  axios.put('/cliente/desactivar', {
+                    'id' : id
+                })
+                .then(function (response) {
+                    me.listar_cliente(1,'','nombre');
+                    swalWithBootstrapButtons.fire(
+                    'Desactivado',
+                    'El Cliente ha sido desactivado correctamente',
+                    'success'
+                    )
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                    'Cancelado',
+                    '',
+                    'error'
+                    )
+                }
+                })
+           },
+            activarCliente(id){
+                               console.log(id);
+               const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+                })
+                swalWithBootstrapButtons.fire({
+                title: 'Estas seguro de activar este Cliente?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Aceptar',
+                cancelButtonText: 'Cancelar',
+                reverseButtons: true
+                }).then((result) => {
+                if (result.isConfirmed) {
+                     let me=this;
+                  axios.put('/cliente/activar', {
+                    'id' : id
+                })
+                .then(function (response) {
+                    me.listar_cliente(1,'','nombre');
+                    swalWithBootstrapButtons.fire(
+                    'Activado',
+                    'Cliente ha sido Activada correctamente',
+                    'success'
+                    )
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                    'Cancelado',
+                    '',
+                    'error'
+                    )
+                }
+                })
+           },
+ 
+
+
+
           
         },mounted() {
           this.listar_cliente(1,this.buscar,this.criterio);     

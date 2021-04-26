@@ -44,32 +44,56 @@ class ClienteController extends Controller
 
     public function register(Request $request) {
 
-        try {
-            $validator = Validator::make($request->all(), [
-                'tipo_documento'=>'required',
-                'num_documento' => 'required|unique:users',
-                'nombre' => 'required',
-                'apellido' => 'required',
-                'ciudad' => 'required',
-                // 'latitud' => 'required',
-                // 'longitud' => 'required'
-            ]);
+           try 
+           {
+                    $validator = Validator::make($request->all(), [
+                        'tipo_documento'=>'required',
+                        'num_documento' => 'required|unique:users',
+                        'nombre' => 'required',
+                        'apellido' => 'required',
+                        'ciudad' => 'required',
+                        // 'latitud' => 'required',
+                        // 'longitud' => 'required'
+                    ]);
 
-            $cliente = Cliente::create([
-            'tipo_documento' => $request->get('tipo_documento'),
-            'num_documento' => $request->get('num_documento'),
-            'nombre' => $request->get('nombre'),
-            'apellido' => $request->get('apellido'),
-            'ciudad' => $request->get('ciudad'),
-            'latitud' => $request->get('latitud'),
-            'longitud' => $request->get('longitud'),
-            ]);
+                    $cliente = Cliente::create([
+                    'tipo_documento' => $request->get('tipo_documento'),
+                    'num_documento' => $request->get('num_documento'),
+                    'nombre' => $request->get('nombre'),
+                    'apellido' => $request->get('apellido'),
+                    'ciudad' => $request->get('ciudad'),
+                    'latitud' => $request->get('latitud'),
+                    'longitud' => $request->get('longitud'),
+                    ]);
             
-          return response()->json(['status' => true],200);
-        } catch (\Exception $exception) {
+                   return response()->json(['status' => true],200);
+            } catch (\Exception $exception) {
+
             return response()->json([$exception->getMessage()], 401);
+
         }
     }
+
+
+
+
+
+    public function desactivar(Request $request)
+    {
+        if(!$request->ajax()){return redirect('/');}
+        $producto = Cliente::findOrFail($request->get('id'));
+        $producto->estado=0;
+        $producto->update();
+    }
+
+    public function activar(Request $request)
+    {
+        if(!$request->ajax()){return redirect('/');}
+        $producto = Cliente::findOrFail($request->get('id'));
+        $producto->estado=1;
+        $producto->update();
+    }
+
 
 
 
