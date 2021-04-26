@@ -35,20 +35,12 @@
     </header>
 
     <div class="app-body">
-        <div class="sidebar">
-            <nav class="sidebar-nav">
-                <ul class="nav">
-                   <br><br>
-                    
 
-                    <li class="nav-item nav-dropdown">
-                        <a class="nav-link" href="#"><i class="icon-people"></i> Usuarios</a>
-                    </li>
 
-                </ul>
-            </nav>
-            <button class="sidebar-minimizer brand-minimizer" type="button"></button>
-        </div>
+            <!-- Contenido menu -->
+            @include('contenido/menu')
+            <!-- /Fin del contenido menu -->
+
             <!-- Contenido Principal -->
             @include('contenido/contenido')
             <!-- /Fin del contenido principal -->
@@ -58,8 +50,8 @@
     
 
     <footer class="app-footer">
-        <span><a href="https://fidiaspro.com/"> &copy;  2021</a>   FidiasPRO. </span>
-        <span class="ml-auto"><a href="https://fidiaspro.com/">Todos los derechos reservados | 865 826 312 | info@fidiaspro.com 
+        <span><a href="https://Prueba.com/"> &copy;  2021</a>   Prueba. </span>
+        <span class="ml-auto"><a href="https://Prueba.com/">Todos los derechos reservados | 111 111 111 | info@Prueba.com 
 
 </a></span>
     </footer>
